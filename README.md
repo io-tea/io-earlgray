@@ -1,0 +1,2 @@
+Sensors:
+* color sensor
