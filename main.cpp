@@ -2,7 +2,7 @@
 #include "greyscale.h"
 
 Serial serial(USBTX, USBRX);
-iotea::earlgrey::GreyscaleSensor greyscaleSensor(D0);
+iotea::earlgrey::GreyscaleSensor greyscaleSensor(A0);
 iotea::earlgrey::greyscale_t value;
 
 int main() {
