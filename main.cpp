@@ -1,16 +1,25 @@
-#include "io-tea/node/node.h"
-
 #include "mbed.h"
+#include "io-tea/node.h"
 #include "greyscale.h"
 
-Serial serial(USBTX, USBRX);
 iotea::earlgrey::GreyscaleSensor greyscaleSensor(A0);
-iotea::earlgrey::greyscale_t value;
 
 int main() {
-    serial.baud(115200);
-    while (true) {
-        value = greyscaleSensor.read();
-        serial.printf("%.2f\r\n", value);
+    setupSerial("EARLGREY - greyscale sensor");
+    setupNodeRadio(0xABCDEF00);
+    setupTicker();
+
+    time_t lastStatsTime = time(nullptr) - 1;
+    for (int tick = 0;; ++tick) {
+        time_t now = time(nullptr);
+        if (lastStatsTime != now) {
+            lastStatsTime = now;
+            printStatus();
+        }
+
+        if (tick) {
+            tick = false;
+            sendCoapMessage("g", std::to_string(greyscaleSensor.read()));
+        }
     }
 }
